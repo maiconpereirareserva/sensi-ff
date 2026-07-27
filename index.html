@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#f6a800">
+  <meta name="description" content="Calculadora local de sensibilidade personalizada para Free Fire, sem acesso ao jogo ou à conta do usuário.">
+  <meta name="color-scheme" content="dark">
+  <title>SensiSmart FF</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#inicio" aria-label="Ir para o início">
+        <span class="brand-mark" aria-hidden="true">S</span>
+        <span>
+          <strong>SensiSmart</strong>
+          <small>FF</small>
+        </span>
+      </a>
+      <div class="topbar-actions">
+        <span id="connectionStatus" class="status-pill" aria-live="polite">Online</span>
+        <button id="installButton" class="button ghost small hidden" type="button">Instalar</button>
+      </div>
+    </header>
+
+    <main>
+      <section id="inicio" class="hero section active-section">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <span class="eyebrow">AJUSTE INTELIGENTE • 0–200</span>
+            <h1>Descubra uma sensibilidade personalizada para o seu celular</h1>
+            <p>O SensiSmart FF analisa somente os recursos permitidos pelo navegador e combina os dados do aparelho com seu estilo de jogo.</p>
+            <div class="hero-actions">
+              <button id="startAnalysisButton" class="button primary" type="button">
+                <span aria-hidden="true">⚡</span> Analisar meu aparelho
+              </button>
+              <button id="openProfilesButton" class="button secondary" type="button">
+                <span aria-hidden="true">▣</span> Perfis salvos
+              </button>
+            </div>
+            <p class="browser-note">O navegador detectará somente as informações permitidas pelo Android.</p>
+          </div>
+
+          <div class="hero-panel" aria-label="Prévia da análise">
+            <div class="radar-ring">
+              <div class="radar-core">FF</div>
+            </div>
+            <div class="preview-stats">
+              <div><span>Detecção</span><strong>Local</strong></div>
+              <div><span>Cálculo</span><strong>Determinístico</strong></div>
+              <div><span>Privacidade</span><strong>Sem servidor</strong></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="analysisSection" class="section hidden" aria-labelledby="analysisTitle">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">ETAPA 1</span>
+            <h2 id="analysisTitle">Análise do aparelho</h2>
+            <p>Confira os dados detectados e complete apenas o que o navegador não consegue identificar.</p>
+          </div>
+          <span id="analysisProgress" class="analysis-progress">Aguardando</span>
+        </div>
+
+        <div class="grid two-columns">
+          <article class="card">
+            <div class="card-heading">
+              <h3>Informações detectadas</h3>
+              <button id="rerunDetectionButton" class="icon-button" type="button" title="Executar detecção novamente" aria-label="Executar detecção novamente">↻</button>
+            </div>
+            <dl id="detectedDataList" class="data-list" aria-live="polite"></dl>
+          </article>
+
+          <article class="card">
+            <div class="card-heading">
+              <h3>Teste leve de desempenho</h3>
+              <span class="safe-badge">Seguro</span>
+            </div>
+            <div class="benchmark-display">
+              <strong id="benchmarkScore">—</strong>
+              <span id="benchmarkLabel">Ainda não executado</span>
+            </div>
+            <div class="meter neutral"><span id="benchmarkBar" style="width: 0%"></span></div>
+            <p class="muted">O teste executa operações simples em JavaScript por poucos instantes e não altera o aparelho.</p>
+          </article>
+        </div>
+
+        <form id="deviceForm" class="card form-card" novalidate>
+          <div class="card-heading stacked-mobile">
+            <div>
+              <h3>Confirme os dados</h3>
+              <p class="muted">Campos marcados com * são obrigatórios.</p>
+            </div>
+            <button id="fillReferenceButton" class="button ghost small" type="button">Usar Galaxy A14 de exemplo</button>
+          </div>
+
+          <div class="form-grid">
+            <label class="field">
+              <span>Marca do celular *</span>
+              <input id="brand" name="brand" type="text" maxlength="40" placeholder="Ex.: Samsung" required autocomplete="organization">
+            </label>
+
+            <label class="field">
+              <span>Modelo *</span>
+              <input id="model" name="model" type="text" maxlength="60" placeholder="Ex.: Galaxy A14 5G" required>
+            </label>
+
+            <label class="field">
+              <span>Memória RAM *</span>
+              <select id="ram" name="ram" required>
+                <option value="">Selecione</option>
+                <option value="2">2 GB</option>
+                <option value="3">3 GB</option>
+                <option value="4">4 GB</option>
+                <option value="6">6 GB</option>
+                <option value="8">8 GB</option>
+                <option value="12">12 GB</option>
+                <option value="16">16 GB ou mais</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Taxa de atualização *</span>
+              <select id="refreshRate" name="refreshRate" required>
+                <option value="">Selecione</option>
+                <option value="60">60 Hz</option>
+                <option value="90">90 Hz</option>
+                <option value="120">120 Hz</option>
+                <option value="144">144 Hz</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>DPI do aparelho *</span>
+              <input id="dpi" name="dpi" type="number" min="120" max="1000" step="1" placeholder="Ex.: 400" required inputmode="numeric">
+              <small>Use o DPI configurado no sistema ou o valor padrão do aparelho.</small>
+            </label>
+
+            <label class="field">
+              <span>Película *</span>
+              <select id="screenProtector" name="screenProtector" required>
+                <option value="none">Sem película</option>
+                <option value="glass">Película de vidro</option>
+                <option value="hydrogel">Película de hidrogel</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Estado da tela *</span>
+              <select id="screenState" name="screenState" required>
+                <option value="new">Nova</option>
+                <option value="normal" selected>Normal</option>
+                <option value="worn">Desgastada</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Estilo de jogo *</span>
+              <select id="playStyle" name="playStyle" required>
+                <option value="balanced">Equilibrado</option>
+                <option value="rush">Rushador</option>
+                <option value="long">Longa distância</option>
+                <option value="headshot">Jogador de capa</option>
+                <option value="sniper">Jogador de sniper</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Quantidade de dedos *</span>
+              <select id="fingers" name="fingers" required>
+                <option value="2">2 dedos</option>
+                <option value="3">3 dedos</option>
+                <option value="4">4 dedos</option>
+                <option value="5">5 dedos</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Preferência *</span>
+              <select id="preference" name="preference" required>
+                <option value="low">Baixa e controlada</option>
+                <option value="medium" selected>Média</option>
+                <option value="high">Alta</option>
+                <option value="very-high">Muito alta</option>
+              </select>
+            </label>
+
+            <label class="field span-2">
+              <span>Problema atual *</span>
+              <select id="currentProblem" name="currentProblem" required>
+                <option value="none">Nenhum / ainda não sei</option>
+                <option value="not-rising">Mira não sobe</option>
+                <option value="overshoot">Mira passa da cabeça</option>
+                <option value="shaking">Mira treme</option>
+                <option value="close-range">Dificuldade com armas de curta distância</option>
+                <option value="long-range">Dificuldade com armas de longa distância</option>
+                <option value="sniper">Dificuldade com sniper</option>
+              </select>
+            </label>
+          </div>
+
+          <details class="advanced-fields">
+            <summary>Armazenamento e dados avançados</summary>
+            <div class="form-grid top-gap">
+              <label class="field">
+                <span>Armazenamento total</span>
+                <input id="storageTotal" name="storageTotal" type="number" min="8" max="2048" step="1" placeholder="Ex.: 128" inputmode="decimal">
+                <small>Em GB. O navegador normalmente não informa este dado.</small>
+              </label>
+              <label class="field">
+                <span>Armazenamento utilizado</span>
+                <input id="storageUsed" name="storageUsed" type="number" min="0" max="2048" step="0.1" placeholder="Ex.: 99,4" inputmode="decimal">
+                <small>Em GB. Deve ser menor ou igual ao total.</small>
+              </label>
+            </div>
+          </details>
+
+          <div id="formError" class="form-error hidden" role="alert"></div>
+          <div class="form-actions">
+            <button class="button primary" type="submit">Gerar minha sensibilidade</button>
+          </div>
+        </form>
+      </section>
+
+      <section id="resultSection" class="section hidden" aria-labelledby="resultTitle">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">RESULTADO</span>
+            <h2 id="resultTitle">Sua sensibilidade recomendada</h2>
+            <p id="resultSubtitle">Configuração calculada localmente.</p>
+          </div>
+          <span id="performanceClassBadge" class="class-badge">Intermediário</span>
+        </div>
+
+        <div id="sensitivityCards" class="sensitivity-grid"></div>
+
+        <div class="action-grid">
+          <button id="copyButton" class="button secondary" type="button">Copiar configuração</button>
+          <button id="saveProfileButton" class="button secondary" type="button">Salvar perfil</button>
+          <button id="calibrateButton" class="button primary" type="button">Calibrar mira</button>
+          <button id="shareButton" class="button secondary" type="button">Compartilhar resultado</button>
+          <button id="restoreButton" class="button ghost" type="button">Restaurar recomendados</button>
+          <button id="restartButton" class="button ghost" type="button">Refazer análise</button>
+        </div>
+
+        <article class="card explanation-card">
+          <div class="card-heading">
+            <h3>Por que essa sensibilidade foi recomendada?</h3>
+            <span aria-hidden="true">◎</span>
+          </div>
+          <div id="recommendationExplanation" class="explanation-content"></div>
+        </article>
+
+        <article class="card technical-card">
+          <details>
+            <summary>Ver relatório técnico</summary>
+            <div id="technicalReport" class="technical-report"></div>
+          </details>
+        </article>
+      </section>
+
+      <section id="calibrationSection" class="section hidden" aria-labelledby="calibrationTitle">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">ETAPA 2</span>
+            <h2 id="calibrationTitle">Calibração da mira</h2>
+            <p>Teste a primeira configuração no modo treino e responda com base no comportamento real.</p>
+          </div>
+        </div>
+
+        <form id="calibrationForm" class="card calibration-form">
+          <fieldset>
+            <legend>1. Ao puxar o botão de disparo, a mira fica abaixo da cabeça?</legend>
+            <label class="choice"><input type="radio" name="belowHead" value="yes" required><span>Sim</span></label>
+            <label class="choice"><input type="radio" name="belowHead" value="no" required><span>Não</span></label>
+          </fieldset>
+
+          <fieldset>
+            <legend>2. A mira passa por cima da cabeça?</legend>
+            <label class="choice"><input type="radio" name="aboveHead" value="yes" required><span>Sim</span></label>
+            <label class="choice"><input type="radio" name="aboveHead" value="no" required><span>Não</span></label>
+          </fieldset>
+
+          <fieldset>
+            <legend>3. A mira fica tremendo durante o movimento?</legend>
+            <label class="choice"><input type="radio" name="shaking" value="yes" required><span>Sim</span></label>
+            <label class="choice"><input type="radio" name="shaking" value="no" required><span>Não</span></label>
+          </fieldset>
+
+          <div class="optional-adjustments">
+            <h3>Ajustes adicionais</h3>
+            <label class="toggle-row"><input id="sniperTooFast" type="checkbox"><span>Minha mira AWM está rápida demais</span></label>
+            <label class="toggle-row"><input id="movementSlow" type="checkbox"><span>O movimento geral está lento</span></label>
+          </div>
+
+          <div class="form-actions split">
+            <button id="cancelCalibrationButton" class="button ghost" type="button">Voltar</button>
+            <button class="button primary" type="submit">Gerar correção</button>
+          </div>
+        </form>
+      </section>
+
+      <section id="comparisonSection" class="section hidden" aria-labelledby="comparisonTitle">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">CALIBRAÇÃO CONCLUÍDA</span>
+            <h2 id="comparisonTitle">Resultado anterior e corrigido</h2>
+            <p>Use a versão corrigida e faça pequenas alterações somente após novos testes.</p>
+          </div>
+        </div>
+        <div id="comparisonTable" class="comparison-table"></div>
+        <div class="action-grid comparison-actions">
+          <button id="applyCalibrationButton" class="button primary" type="button">Aplicar configuração corrigida</button>
+          <button id="copyCalibratedButton" class="button secondary" type="button">Copiar corrigida</button>
+          <button id="backToResultButton" class="button ghost" type="button">Manter anterior</button>
+        </div>
+      </section>
+
+      <section id="profilesSection" class="section hidden" aria-labelledby="profilesTitle">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">ARMAZENAMENTO LOCAL</span>
+            <h2 id="profilesTitle">Perfis salvos</h2>
+            <p>Os perfis ficam somente neste navegador.</p>
+          </div>
+          <button id="closeProfilesButton" class="button ghost small" type="button">Voltar ao início</button>
+        </div>
+        <div id="profilesList" class="profiles-list"></div>
+      </section>
+
+      <section class="section privacy-section">
+        <article class="privacy-card">
+          <span class="privacy-icon" aria-hidden="true">◆</span>
+          <div>
+            <h2>Privacidade em primeiro lugar</h2>
+            <p>Este aplicativo não acessa sua conta do Free Fire, não modifica arquivos do jogo e não envia informações do aparelho para servidores. Os dados são processados localmente no navegador.</p>
+          </div>
+          <button id="clearDataButton" class="button danger small" type="button">Limpar todos os dados</button>
+        </article>
+      </section>
+    </main>
+
+    <footer>
+      <p>SensiSmart FF é uma ferramenta independente de recomendação manual. Não possui vínculo com os desenvolvedores do jogo.</p>
+    </footer>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="script.js" defer></script>
+</body>
+</html>
